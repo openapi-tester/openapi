@@ -1,0 +1,152 @@
+openapi: 3.0.0
+info:
+  description: This is a simple API
+  version: 2.0.0
+  title: Simple API
+servers:
+- url: https://{host}/api/v{version}/
+  variables:
+    varsion:
+      enum:
+        - "2.0"
+      default: "2.0"
+paths:
+  /courses:
+    get:
+      summary: Retrieve courses by it start_date period.
+      description: Returns information about courses
+      parameters: 
+        - in: query
+          name: from_start_date
+          description: Start of period of courses start date
+          required: true
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: to_start_date 
+          description: End of period of courses start date
+          required: true
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: page
+          description: Page number
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: per_page
+          description: Items per page
+          required: false
+          schema:
+            type: integer
+            format: int32
+      responses:
+        "200":
+          description: Courses matching criteria
+          content:
+            aplication/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Course'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+                  links:
+                    $ref: '#/components/schemas/Links'
+components:
+  schemas:
+    Meta:
+      title: Response meta information
+      type: object
+      properties:
+        page:
+          type: integer
+          format: int32
+          description: Current page number.
+          example: 2
+        per_page:
+          type: integer
+          format: int32
+          description: Current results per page value.
+          example: 100
+        total_pages:
+          type: integer
+          format: int32
+          description: Total number of pages.
+          example: 15
+        total:
+          type: integer
+          format: int32
+          description: Total number of entries.
+          example: 1245
+    Links:
+      type: object
+      title: Links for pagination information.
+      properties:
+        self:
+          type: string
+          description: The link that generated the current response document. 
+          example: url
+        first:
+          type: string
+          description: The first page of data.
+          example: url
+        last:
+          type: string
+          description: The last page of data.
+          example: url
+        prev:
+          type: string
+          description: The previous page of data.
+          example: url
+        next:
+          type: string
+          description: The next page of data.
+          example: url
+    Course:
+      title: Course information object.
+      type: object
+      properties:
+        number:
+          type: string
+          description: Course number.
+          example: AB 123
+        title:
+          type: string
+          description: Course title.
+          example: Preparation for SMTH
+        start_date:
+          type: string
+          description: Course start date in format ISO 8601 Date (YYYY-MM-DD).
+          example: "2020-02-15"
+        end_date: 
+          type: string
+          description: Course end date in format ISO 8601 Date (YYYY-MM-DD).
+          example: "2020-05-15"
+        course_type:
+          type: boolean
+          description: Course type name.
+          example: Professional
+        program_short_name:
+          type: string
+          description: Program short name.
+          example: VN1570
+        program_name:
+          type: string
+          description: Program name.
+          example: Program - Diploma
+        campus_short_name:
+          type: string
+          description: Campus short name.
+          example: FR
+        campus_name:
+          type: string
+          description: Campus name.
+          example: Fresco
